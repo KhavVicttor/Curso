@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.owo.senai.domain.Cliente;
+import com.owo.senai.exceptions.ObjectNotFoundException;
 import com.owo.senai.repositories.ClienteRepository;
 
 @Service
@@ -16,10 +17,14 @@ public class ClienteService {
 	@Autowired //Faz a instância para mim sem o new.
 	private ClienteRepository repo;
 	
-	//Metodo que faz a busca de cliente
+	//Metodo que faz a busca de cliente por id
 	public Cliente buscar(Integer idCliente) {
+		/* Optional é para se vier sozinho não der erro
+		 NullPointException - Mas me traga uma mensagem de erro*/
 		Optional<Cliente> obj = repo.findById(idCliente);
-		return obj.orElse(null);
+		return obj.orElseThrow(() -> new ObjectNotFoundException(
+				"Número de id não encontrado. Id: " + idCliente + ", tipo: "
+				+ Cliente .class.getName()));
 		
 	}
 
